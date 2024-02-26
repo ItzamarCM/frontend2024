@@ -8,25 +8,24 @@ const specialButtonClasses = 'btn btn-danger w-100'
 function App() {
   const [display, setDisplay] = useState({
     value: '0',
-    hasPoint:false
+    hasPoint: false,
+    operator: '',
+    previousValue: '0'
   })
 
   const updateDisplay = (value) => {
-
-    if(value === '.'){
-
-
-    if(display.hasPoint){
+    if (value === '.') {
+    if (display.hasPoint) {
       return
     }
       setDisplay({
         ...display,
-        value: display.value + value,
-        hasPoint:true
+        value: display.value +value,
+        hasPoint: true
       })
       return
     }
-    if(display.value === '0'){
+    if (display.value === '0') {
       setDisplay({
         ...display,
         value
@@ -35,7 +34,7 @@ function App() {
     }
     setDisplay({
       ...display,
-      value: display.value + value
+      value: display.value +value
     })
   }
 
@@ -43,8 +42,42 @@ function App() {
     setDisplay({
       ...display,
       value: '0',
-      hasPoint:false
+      hasPoint: false
     })
+  }
+
+  const deleteLastCharacter = () => {
+    setDisplay({
+      ...display,
+      value: display.value.slice(0,-1)
+    })
+  }
+  
+  const setOperator = (operator) => {
+    setDisplay({
+      ...display,
+      operator,
+      previousValue: display.value,
+      value: '0',
+      hasPoint: false
+    })
+  }
+
+  const calculate = () => {
+
+    if(display.operator === '') {
+      return
+    }
+
+    const result = eval(display.previousValue + display.operator + display.value)
+    setDisplay({
+      ...display,
+      value: result,
+      operator: '',
+      previousValue: '0'
+
+    })
+
   }
 
   return (
@@ -72,6 +105,7 @@ function App() {
               <button
                 type='button'
                 className={specialButtonClasses}
+                onClick={deleteLastCharacter}
                 >
                   {'<'}
                 </button>                </td>
@@ -132,7 +166,6 @@ function App() {
                 type='button'
                 className={numericButtonClasses}
                 onClick={() => updateDisplay('4')}
-
                 >
                   4
                 </button>              </td>
@@ -141,7 +174,6 @@ function App() {
                 type='button'
                 className={numericButtonClasses}
                 onClick={() => updateDisplay('5')}
-
                 >
                   5
                 </button>              </td>
@@ -150,7 +182,6 @@ function App() {
                 type='button'
                 className={numericButtonClasses}
                 onClick={() => updateDisplay('6')}
-
                 >
                   6
                 </button>              </td>
@@ -168,7 +199,6 @@ function App() {
                 type='button'
                 className={numericButtonClasses}
                 onClick={() => updateDisplay('1')}
-
                 >
                   1
                 </button>              </td>
@@ -193,6 +223,7 @@ function App() {
               <button
                 type='button'
                 className={operationButtonClases}
+                onClick={() => setOperator('+')}
                 >
                   +
                 </button>                
@@ -220,6 +251,7 @@ function App() {
               <button
                 type='button'
                 className={specialButtonClasses}
+                onClick={calculate}
                 >
                   =
                 </button>                </td>
